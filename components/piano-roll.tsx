@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { usePianoRoll } from '@/contexts/piano-roll-context'
 
 const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const NOTE_HEIGHT = 20
@@ -15,7 +16,7 @@ interface Note {
 export function PianoRoll() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [notes, setNotes] = useState<Note[]>([])
-  const [zoom, setZoom] = useState(1)
+  const { zoom } = usePianoRoll()
 
   useEffect(() => {
     const canvas = canvasRef.current

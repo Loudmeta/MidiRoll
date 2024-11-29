@@ -17,7 +17,7 @@ export function ChatSidebar() {
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const tryParseJSON = (text: string) => {
+  const tryParseJSON = (text: string): [string, number, number][] | undefined => {
     try {
       const parsed = JSON.parse(text)
       // Validate the melody format
@@ -31,7 +31,7 @@ export function ChatSidebar() {
         return parsed as [string, number, number][]
       }
     } catch (e) {}
-    return null
+    return undefined
   }
 
   async function handleSendMessage(e: React.FormEvent) {
@@ -51,17 +51,19 @@ export function ChatSidebar() {
       const parsedMelody = tryParseJSON(response)
       
       // Add AI response to chat
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
+      const newMessage: ChatMessage = {
+        role: 'assistant',
         content: response,
         melody: parsedMelody
-      }])
+      }
+      setMessages(prev => [...prev, newMessage])
     } catch (error) {
       console.error('Failed to get AI response:', error)
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Sorry, I encountered an error. Please try again.' 
-      }])
+      const errorMessage: ChatMessage = {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.'
+      }
+      setMessages(prev => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
     }
